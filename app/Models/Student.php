@@ -16,5 +16,6 @@ class Student extends Model
         'nama',
         'rombel',
         'rayon',
+        'image',
     ];
 }

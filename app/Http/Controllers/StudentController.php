@@ -43,11 +43,21 @@ class StudentController extends Controller
                 'rayon' => 'required',
             ]);
 
+            $newName = '';
+            if($request->file('file')){
+               $extension = $request->file('file')->getClientOriginalExtension();
+               $newName = $request->nis.'-'.now()->timestamp.'.'.$extension;
+               $request->file('file')->move(public_path('/storage/'), $newName);
+            }
+
+            $request['image'] = $newName;
+            // $student = Student::create($request->all());
             $student = Student::create([
                 'nis' => $request->nis,
                 'nama' => $request->nama,
                 'rombel' => $request->rombel,
                 'rayon' => $request->rayon,
+                'image' => $newName,
             ]);
 
             $getDateSaved = Student::where('id', $student->id)->first();
@@ -101,13 +111,22 @@ class StudentController extends Controller
             ]);
 
             $student = Student::findOrFail($id);
+            $newName = '';
+            if($request->file('file')){
+               $extension = $request->file('file')->getClientOriginalExtension();
+               $newName = $request->nis.'-'.now()->timestamp.'.'.$extension;
+               $request->file('file')->move(public_path('/storage/'), $newName);
+            }
 
-            $student->update([
-                'nis' => $request->nis,
-                'nama' => $request->nama,
-                'rombel' => $request->rombel,
-                'rayon' => $request->rayon,
-            ]);
+            $request['image'] = $newName;
+            $student = Student::update($request->all());
+
+            // $student->update([
+            //     'nis' => $request->nis,
+            //     'nama' => $request->nama,
+            //     'rombel' => $request->rombel,
+            //     'rayon' => $request->rayon,
+            // ]);
 
             $updatedStudent = Student::where('id', $student->id)->first();
 
